@@ -1,4 +1,4 @@
-# 🍿 BingeTracker MCP
+#  BingeTracker MCP
 
 A remote **Model Context Protocol (MCP)** server that lets AI assistants manage your personal watchlist — track shows, movies, anime, and more through natural conversation.
 
