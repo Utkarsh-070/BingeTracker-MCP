@@ -670,7 +670,7 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "fastmcp" }]
+requires-dist = [{ name = "fastmcp", specifier = ">=2.0,<3.0" }]
 
 [[package]]
 name = "mdurl"
