@@ -12,12 +12,20 @@ CATEGORIES_PATH = os.path.join(os.path.dirname(__file__), "categories.json")
 mcp = FastMCP("BingeTracker")
 
 def load_categories():
-    with open(CATEGORIES_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        with open(CATEGORIES_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
 
 CATEGORIES = load_categories()
 
-async def init_db():
+db_initialized = False
+
+async def ensure_db():
+    global db_initialized
+    if db_initialized:
+        return
     async with aiosqlite.connect(DB_PATH) as c:
         await c.execute("""
             CREATE TABLE IF NOT EXISTS shows(
@@ -37,16 +45,7 @@ async def init_db():
         except sqlite3.OperationalError:
             pass 
         await c.commit()
-
-try:
-    loop = asyncio.get_running_loop()
-except RuntimeError:
-    loop = None
-
-if loop and loop.is_running():
-    loop.create_task(init_db())
-else:
-    asyncio.run(init_db())
+    db_initialized = True
 
 @mcp.tool()
 async def get_genres(media_type: str):
@@ -59,6 +58,7 @@ async def get_genres(media_type: str):
 @mcp.tool()
 async def add_show(title: str, show_type: str, genre: str = "other", status: str = "Plan to Watch"):
     """Add a show to your binge list. Use get_genres first to see valid types and genres."""
+    await ensure_db()
     title = title.title()
     valid_types = list(CATEGORIES.keys())
     if show_type not in valid_types:
@@ -85,6 +85,7 @@ async def add_show(title: str, show_type: str, genre: str = "other", status: str
 
 @mcp.tool()
 async def update_progress(title: str, season: int, episode: int, status: str = "Watching"):
+    await ensure_db()
     title = title.title()
     async with aiosqlite.connect(DB_PATH) as c:
         cur = await c.execute("SELECT id FROM shows WHERE title = ?", (title,))
@@ -104,6 +105,7 @@ async def update_progress(title: str, season: int, episode: int, status: str = "
 
 @mcp.tool()
 async def rate_show(title: str, rating: float):
+    await ensure_db()
     title = title.title()
     if not (0 <= rating <= 10):
         return "Rating must be 0-10. Don't be extra."
@@ -119,6 +121,7 @@ async def rate_show(title: str, rating: float):
 @mcp.tool()
 async def my_list(status: str = None, genre: str = None, media_type: str = None):
     """View your binge list. Optionally filter by status, genre, or media type."""
+    await ensure_db()
     async with aiosqlite.connect(DB_PATH) as c:
         query = "SELECT title, type, genre, status, season, episode, rating FROM shows"
         conditions = []
@@ -153,7 +156,7 @@ async def my_list(status: str = None, genre: str = None, media_type: str = None)
 async def categories():
     CATEGORIES_PATH = os.path.join(os.path.dirname(__file__), "categories.json")
     if not os.path.exists(CATEGORIES_PATH):
-         return '{"error": "File not found, bro"}'
+         return '{"error": "File not found."}'
     with open(CATEGORIES_PATH, "r", encoding="utf-8") as f:
         return f.read()
 
