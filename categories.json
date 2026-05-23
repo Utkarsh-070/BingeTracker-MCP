@@ -1,0 +1,73 @@
+{
+    "anime": [
+      "shonen",
+      "seinen",
+      "shojo",
+      "isekai",
+      "mecha",
+      "slice_of_life",
+      "sports",
+      "psychological_thriller",
+      "romance",
+      "cyberpunk",
+      "classic_90s",
+      "movie_adaptation",
+      "other"
+    ],
+    "tv_series": [
+      "sci_fi_fantasy",
+      "crime_mystery",
+      "sitcom_comedy",
+      "k_drama",
+      "historical_drama",
+      "tech_dystopia",
+      "horror_supernatural",
+      "action_adventure",
+      "political_drama",
+      "reality_trash",
+      "limited_series",
+      "other"
+    ],
+    "movies": [
+      "blockbuster_action",
+      "sci_fi",
+      "horror_slasher",
+      "psychological_horror",
+      "rom_com",
+      "indie_arthouse",
+      "biopic",
+      "war_history",
+      "mystery_noir",
+      "animated_feature",
+      "mcu_dc_superhero",
+      "other"
+    ],
+    "western_animation": [
+      "adult_animation",
+      "superhero_animated",
+      "sci_fi_animated",
+      "childhood_nostalgia",
+      "experimental",
+      "other"
+    ],
+    "documentary": [
+      "tech_coding",
+      "true_crime",
+      "nature_science",
+      "history",
+      "finance_business",
+      "biographical",
+      "sports_doc",
+      "other"
+    ],
+    "web_content": [
+      "tech_tutorials",
+      "video_essays",
+      "gaming_stream_vods",
+      "devlogs",
+      "podcast_video",
+      "retention_editing_guides",
+      "short_films",
+      "other"
+    ]
+  }
