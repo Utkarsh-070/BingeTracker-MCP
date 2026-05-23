@@ -1,15 +1,14 @@
 #  BingeTracker MCP
-
 A remote **Model Context Protocol (MCP)** server that lets AI assistants manage your personal watchlist — track shows, movies, anime, and more through natural conversation.
-
 Built with [FastMCP](https://github.com/jlowin/fastmcp) and SQLite.
 
+> 🌐 **Cloud Deployment:** `https://bingetracker.fastmcp.app/mcp`
+
+          (Use the process mentioned below to use it)
+
 ---
-
 ## What It Does
-
 BingeTracker exposes a set of tools over MCP that any compatible AI client (Claude, Cursor, etc.) can call to:
-
 - **Add** shows, movies, anime, or documentaries to your list
 - **Update** watch progress (season & episode)
 - **Rate** anything on a 0–10 scale
@@ -19,9 +18,7 @@ BingeTracker exposes a set of tools over MCP that any compatible AI client (Clau
 All data is stored locally in a SQLite database that gets created automatically on first run.
 
 ---
-
 ## Available Tools
-
 | Tool | Description |
 |------|-------------|
 | `get_genres` | List valid genres for a given media type |
@@ -31,15 +28,12 @@ All data is stored locally in a SQLite database that gets created automatically 
 | `my_list` | View your full list with optional filters |
 
 ### Resource
-
 | URI | Description |
 |-----|-------------|
 | `binge://categories` | Returns the full genre taxonomy as JSON |
 
 ---
-
 ## Supported Categories
-
 | Media Type | Genres |
 |------------|--------|
 | **Anime** | shonen, seinen, shojo, isekai, mecha, slice_of_life, sports, psychological_thriller, romance, cyberpunk, classic_90s, movie_adaptation |
@@ -50,16 +44,62 @@ All data is stored locally in a SQLite database that gets created automatically 
 | **Web Content** | tech_tutorials, video_essays, gaming_stream_vods, devlogs, podcast_video, retention_editing_guides, short_films |
 
 ---
+## Connect to an MCP Client
 
-## Setup
+### ☁️ Cloud (No Setup Required)
+
+The server is live and you need to follow these steps:
+```
+https://bingetracker.fastmcp.app/mcp
+```
+
+#### Claude Desktop
+
+**Option A — Settings UI** *(Pro/Max/Team/Enterprise)*
+
+Go to **Settings → Connectors → Add custom connector** and enter:
+```
+https://bingetracker.fastmcp.app/mcp
+```
+
+**Option B — `mcp-remote` bridge** *(Free plan / all plans)*
+
+Add this to your `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "BingeTracker": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://bingetracker.fastmcp.app/mcp"]
+    }
+  }
+}
+```
+> Requires [Node.js](https://nodejs.org/) to be installed.
+
+#### Cursor
+
+Add to your MCP settings:
+```json
+{
+  "mcpServers": {
+    "BingeTracker": {
+      "url": "https://bingetracker.fastmcp.app/mcp"
+    }
+  }
+}
+```
+
+---
+## Self-Hosting (Run Locally)
+
+Prefer to run your own instance? Follow the steps below.
 
 ### Prerequisites
-
 - Python 3.12+
 - [uv](https://docs.astral.sh/uv/) (recommended) or pip
 
 ### Installation
-
 ```bash
 git clone https://github.com/Utkarsh-070/BingeTracker-MCP.git
 cd BingeTracker-MCP
@@ -76,51 +116,29 @@ pip install fastmcp
 ```
 
 ### Run the Server
-
 ```bash
 python main.py
 ```
 
 The server starts on `http://localhost:8000` using the Streamable HTTP transport. The SQLite database (`binge.db`) is created automatically on first run.
 
+#### Connect Claude Desktop to Local Instance
+```json
+{
+  "mcpServers": {
+    "BingeTracker": {
+      "url": "http://localhost:8000/mcp"
+    }
+  }
+}
+```
+
 ---
-
-## Connect to an MCP Client
-
-### Claude Desktop
-
-Add this to your `claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "BingeTracker": {
-      "url": "http://localhost:8000/mcp"
-    }
-  }
-}
-```
-
-### Cursor
-
-Add to your MCP settings:
-
-```json
-{
-  "mcpServers": {
-    "BingeTracker": {
-      "url": "http://localhost:8000/mcp"
-    }
-  }
-}
-```
 
 Once connected, just talk naturally — *"Add Attack on Titan as anime, genre shonen"* or *"What's on my list?"*
 
 ---
-
 ## Project Structure
-
 ```
 BingeTracker-MCP/
 ├── main.py              # MCP server with all tools and resources
@@ -131,7 +149,5 @@ BingeTracker-MCP/
 ```
 
 ---
-
 ## License
-
 [MIT](LICENSE)
