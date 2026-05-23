@@ -5,8 +5,15 @@ import sqlite3
 import aiosqlite
 import asyncio
 from datetime import datetime
+import tempfile
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "binge.db")
+local_db = os.path.join(os.path.dirname(__file__), "binge.db")
+try:
+    with open(local_db, "a"):
+        pass
+    DB_PATH = local_db
+except OSError:
+    DB_PATH = os.path.join(tempfile.gettempdir(), "binge.db")
 CATEGORIES_PATH = os.path.join(os.path.dirname(__file__), "categories.json")
 
 mcp = FastMCP("BingeTracker")
